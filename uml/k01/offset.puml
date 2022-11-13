@@ -1,0 +1,121 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+
+package "非实时命中"{
+' 缓存名：k01:unhandle:yyyyMMdd:external
+' 查询库：k01_external_compression_log--
+' 如果缓存里有这个库的info，就加入非实时命中的情报进行下发,下发到[k01:external:priority_issued]
+}
+
+package "更新优先下发外联情报的状态"{
+' 缓存名：k01:external:priority_issued，搜索条件：company.name() + "#" + ioc
+' 逻辑 如果存在过期时间,并且过期时间在明天之前，则设置到明天
+' 调用方法：
+    ' 1.a01ByDayHandler ,全量数据
+    ' 2. 腾讯新情报
+    ' 3. 华为的高影响情报
+    ' 4. Q01FullDownloadMemory,360全量
+    ' 5. x01ByFullHandler, 奇安信全量
+
+}
+
+
+package "设置增量/全量外联缓存，用于外联回传日志匹配"{
+'缓存名：k01:yyyyMMdd:external
+' 各个厂商都设置
+
+' 华为下发增量情报：高置信度;将非实时命中的外联情报增量下发
+' q01ByHourHandler, 360 增量下发设置；将非实时命中的外联情报增量下发
+' 奇安信，x01ByIncrExternalHandler
+' 腾讯，
+' globalDataPrepare,全量数据准备
+' unHandleGlobalDataPrepare,未下发外联情报全量数据准备
+}
+
+package "厂商下发情报"{
+' 1. 先获取当前offset
+' 2. 构造厂商情报key：k01:company:offset+1
+' 3. 把需要下发的情报设置进缓存
+' 奇安信：x01ByIncrExternalHandler
+[x01ByIncrExternalHandler]
+
+' 腾讯增量情报下发，k01:t01:offset+1
+[t01IntelligencePull]
+
+' 360小时导入
+[Q01IncrementDownload]
+[q01ByHourHandler]
+
+
+' 华为增量情报下发：高置信度
+[huaWeiIntelligencePull]
+
+' 非实时命中外联情报定时下发,下发各家厂商
+[NoRealHitExternalInfoIssued]
+
+' safeguardTheGlobalOffsetHandler ,每日凌晨1次,全量offset维护,latest_offset维护，global_offset赋值
+' 等全量数据生成再设置
+' 全量数据准备完成key：k01:yyyyMMdd:global_finish
+' 全局offsetkey：global_offset
+
+'expireIndustriesHandler
+'/**
+' * 已在每日设置全量的时候做了清理
+' * 定时删除redis行业增量数据hash——key中
+' * 1天外的offset数据
+' * 每小时执行一次
+' */
+}
+
+package "incrIntelligenceHandler"{
+[增量OFFSET设置]
+'/**
+' * 增量情报处理
+' * 每30秒一次
+' * offset维护，latest_offset就是正在准备生成的offset
+' * 定时任务，定时将redis缓存中latest_offset的值加1
+' * latest_offset+1不可能等于global_offset，因为两个任务是同步执行的
+' * 加1的同时批量修改增量表中offset状态为待处理的数据
+' * 加1的前提条件：
+' * 当前latest_offset对应的情报数量大于500
+' */
+'把k_intelligence_incr表中offset=-1的数据，改成当前offset
+}
+
+
+
+package "Some Group" {
+  HTTP - [First Component]
+  [Another Component]
+}
+
+node "Other Groups" {
+  FTP - [Second Component]
+  [First Component] --> FTP
+}
+
+cloud {
+  [Example 1]
+}
+actor actor
+actor/ "actor/"
+agent agent
+
+database "MySql" {
+  folder "This is my folder" {
+    [Folder 3]
+  }
+  frame "Foo" {
+    [Frame 4]
+  }
+}
+
+
+[Another Component] --> [Example 1]
+[Example 1] --> [Folder 3]
+[Folder 3] --> [Frame 4]
+
+
+
+@enduml

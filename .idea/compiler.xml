@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="http-clint-learn" />
+        <module name="job-learn" />
+        <module name="thread-learn" />
+        <module name="es-learn" />
+        <module name="redis-learn" />
+        <module name="netty-learn" />
+        <module name="excel-learn" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="uml" target="8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="es-learn" options="-parameters" />
+      <module name="http-clint-learn" options="-parameters" />
+      <module name="job-learn" options="-parameters" />
+      <module name="netty-learn" options="-parameters" />
+      <module name="redis-learn" options="-parameters" />
+      <module name="springboot-helloworld" options="-parameters" />
+      <module name="thread-learn" options="-parameters" />
+    </option>
+  </component>
+</project>
