@@ -2,5 +2,40 @@
 'https://plantuml.com/component-diagram
 
 
+[初始offset]
+
+package "全量数据准备"{
+[globalDataPrepare]
+}
+
+package "增量数据"{
+[externalDataPrepare]
+}
+package "全量offset"{
+[safeguardTheGlobalOffsetHandler]
+}
+
+package "厂商下发情报"{
+' 1. 先获取当前offset
+' 2. 构造厂商情报key：k01:company:offset+1
+' 3. 把需要下发的情报设置进缓存
+' 奇安信：x01ByIncrExternalHandler
+[x01ByIncrExternalHandler]
+
+' 腾讯增量情报下发，k01:t01:offset+1
+[t01IntelligencePull]
+
+' 360小时导入
+[Q01IncrementDownload]
+[q01ByHourHandler]
+
+
+' 华为增量情报下发：高置信度
+[huaWeiIntelligencePull]
+
+' 非实时命中外联情报定时下发,下发各家厂商
+[NoRealHitExternalInfoIssued]
+
+}
 
 @enduml
