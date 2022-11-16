@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:设备端发起请求;
+:判断offsetRequest;
+
+if (返回全量数据) then (yes)
+  :查询设备下发情报源的优先级;
+  :根据优先级查询厂商缓存库;
+  :按每10万条的数据返回;
+else
+:根据增量情报返回;
+:原逻辑保持不变;
+
+endif
+
+stop
+
+@enduml
