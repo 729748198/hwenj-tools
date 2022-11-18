@@ -23,6 +23,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="es-learn" options="-parameters" />
+      <module name="excel-learn" options="-parameters" />
       <module name="http-clint-learn" options="-parameters" />
       <module name="job-learn" options="-parameters" />
       <module name="netty-learn" options="-parameters" />

@@ -1,3 +1,5 @@
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -30,19 +32,20 @@ public class Upgrade {
         httpPost.setHeader( "Content-Type", "application/json" );
         String charSet = "UTF-8";
         long  date = new Date().getTime();
-        String json = "{\n" +
+        String json ="{\n" +
                 "    \"authCode\": \"FQAFM3JL6YN2N8FI5ANZP74W6M4CCBVY\", \n" +
-                "    \"machineId\": \"2DBF69F1B58B0AB9DC4EA7CCBFDB4361\", \n" +
-                "    \"timestamp\": \"" +date+"\","+
+                "    \"machineId\": \"8C2B8ABEEDB4551EFC2BC2119B21E0E0\", \n" +
+                "    \"timestamp\": 1668762928, \n" +
                 "    \"productType\": 1, \n" +
-                "    \"systemVersion\": \"8.2.2.24572-2733737a\", \n" +
+                "    \"systemVersion\": \"V2.1(8.2.2.24588-cc34f6bf) \", \n" +
                 "    \"patchVersion\": \"--\", \n" +
                 "    \"ruleVersion\": \"8.243\", \n" +
                 "    \"infoVersion\": \"\", \n" +
                 "    \"ipdb_version\": \"\"\n" +
                 "}";
-
-        StringEntity entity = new StringEntity( json, charSet );
+        JSONObject jsonObject = JSON.parseObject(json);
+        jsonObject.put("timestamp",new Date().getTime()/1000);
+        StringEntity entity = new StringEntity( jsonObject.toJSONString(), charSet );
         httpPost.setEntity( entity );
         CloseableHttpResponse response = null;
 
