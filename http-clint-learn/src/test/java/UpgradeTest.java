@@ -20,19 +20,19 @@ import java.util.Date;
  * @since 2022/11/15
  */
 @Slf4j
-public class Upgrade {
+public class UpgradeTest {
 
     private String getJson(String type){
         switch (type){
-            case "FF8FA08BF601C4ADD5E09A41DE2DF83E":
+            case "6F3DDDC0739D7C958F57E5AACC20600B":
                 return "{\n" +
-                        "    \"authCode\": \"FQAFM3JL6YN2N8FI5ANZP74W6M4CCBVY\", \n" +
-                        "    \"machineId\": \"FF8FA08BF601C4ADD5E09A41DE2DF83E\", \n" +
+                        "    \"authCode\": \"6JA82Z7465WVC3F3KU4QLUWX8AMI5X3A\", \n" +
+                        "    \"machineId\": \"6F3DDDC0739D7C958F57E5AACC20600B\", \n" +
                         "    \"timestamp\": 1668762928, \n" +
-                        "    \"productType\": 2, \n" +
-                        "    \"systemVersion\": \"V2.1(8.2.2.24598-9f9dd927)\", \n" +
-                        "    \"patchVersion\": \"noreboot\", \n" +
-                        "    \"ruleVersion\": \"8.243\", \n" +
+                        "    \"productType\": 1, \n" +
+                        "    \"systemVersion\": \"V2.1(8.2.2.24588-cc34f6bf)\", \n" +
+                        "    \"patchVersion\": \"20210521194020\", \n" +
+                        "    \"ruleVersion\": \"\", \n" +
                         "    \"infoVersion\": \"\", \n" +
                         "    \"ipdb_version\": \"\"\n" +
                         "}";
@@ -50,27 +50,27 @@ public class Upgrade {
                         "}";
             case "C85E6BC967DB28646F2BD633FDC495D3":
                 return "{\n" +
-                        "\"authCode\": \"FQAFM3JL6YN2N8FI5ANZP74W6M4CCBVY\",\n" +
-                        "\"machineId\": \"C85E6BC967DB28646F2BD633FDC495D3\",\n" +
-                        "\"timestamp\": 1669805847,\n" +
-                        "\"productType\": 1,\n" +
-                        "\"systemVersion\": \"V2.1(8.2.2.24673-70cdc4fd) \",\n" +
-                        "\"patchVersion\": \"20210521194020\",\n" +
-                        "\"ruleVersion\": \"8.243\",\n" +
-                        "\"infoVersion\": \"\",\n" +
-                        "\"ipdb_version\": \"\"\n" +
+                        "    \"authCode\": \"FQAFM3JL6YN2N8FI5ANZP74W6M4CCBVY\", \n" +
+                        "    \"machineId\": \"C85E6BC967DB28646F2BD633FDC495D3\", \n" +
+                        "    \"timestamp\": 1669275982, \n" +
+                        "    \"productType\": 1, \n" +
+                        "    \"systemVersion\": \"V2.1(8.2.2.24641-6f9e9161) \", \n" +
+                        "    \"patchVersion\": \"20210521194020\", \n" +
+                        "    \"ruleVersion\": \"8.243\", \n" +
+                        "    \"infoVersion\": \"\", \n" +
+                        "    \"ipdb_version\": \"\"\n" +
                         "}";
             case "D571341A3269B2AA8A609F38FA9DE384":
                 return "{\n" +
-                        "\"authCode\": \"FQAFM3JL6YN2N8FI5ANZP74W6M4CCBVY\",\n" +
-                        "\"machineId\": \"D571341A3269B2AA8A609F38FA9DE384\",\n" +
-                        "\"timestamp\": 1669805847,\n" +
-                        "\"productType\": 1,\n" +
-                        "\"systemVersion\": \"8.2.2.24697-9cf91bf3\",\n" +
-                        "\"patchVersion\": \"--\",\n" +
-                        "\"ruleVersion\": \"\",\n" +
-                        "\"infoVersion\": \"\",\n" +
-                        "\"ipdb_version\": \"\"\n" +
+                        "    \"authCode\": \"FQAFM3JL6YN2N8FI5ANZP74W6M4CCBVY\", \n" +
+                        "    \"machineId\": \"D571341A3269B2AA8A609F38FA9DE384\", \n" +
+                        "    \"timestamp\": 1670318147, \n" +
+                        "    \"productType\": 1, \n" +
+                        "    \"systemVersion\": \"V2.1(8.2.2.24697-9cf91bf3) \", \n" +
+                        "    \"patchVersion\": \"--\", \n" +
+                        "    \"ruleVersion\": \"8.243\", \n" +
+                        "    \"infoVersion\": \"\", \n" +
+                        "    \"ipdb_version\": \"\"\n" +
                         "}";
         }
         return "";
@@ -78,8 +78,8 @@ public class Upgrade {
 
     @Test
     public void  testLocal() throws IOException {
-        String url = "http://192.168.1.127:10888/upgrade/api/query";
-        //String url = "http://localhost:10888/upgrade/api/query";
+        //String url = "http://192.168.1.127:10888/upgrade/api/query";
+        String url = "http://localhost:10888/upgrade/api/query";
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost( url );// 创建httpPost
         httpPost.setHeader( "Accept", "application/json" );

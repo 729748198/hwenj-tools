@@ -1,0 +1,16 @@
+{
+  "license_code": "23AAFVPTLM2FKBW6UCDZZQEIB7L5CZEE",
+  "serial_number": "70E891B6A71490B0D4A714FDCA557D71",
+  "expiration_date": "2021-01-15 00:00:00 至 2023-01-15 23:59:59",
+  "interdict": "开启",
+  "company": "一所秦城机房ceshi",
+  "industry": "DX",
+  "province": "110000",
+  "city": "110100",
+  "area": "110101",
+  "contact_name": "宋玉斌",
+  "contact_phone": "15313779331",
+  "contact_mail": "songyb@gov110.cn",
+  "hostname": "k01",
+  "timeout": 30
+}

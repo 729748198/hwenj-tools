@@ -32,7 +32,14 @@ import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author : hewenjie
@@ -46,7 +53,7 @@ public class QueryDomainList {
     private RestHighLevelClient restHighLevelClient231;
 
     @Test
-    public void testDomain() throws Exception {
+    public void testAttack() throws Exception {
         init();
         String index = "k01_attack_src_ip_history";
         SearchRequest searchRequest = new SearchRequest();
@@ -55,7 +62,7 @@ public class QueryDomainList {
         queryBuilder2.must(QueryBuilders.termQuery("ip_type", "1"));
         sourceBuilder.size(1000);
         sourceBuilder.query(queryBuilder2);
-        sourceBuilder.from(1000);
+        sourceBuilder.from(3000);
         searchRequest.indices(index).source(sourceBuilder);
         SearchResponse search = restHighLevelClient231.search(searchRequest);
         SearchHit[] hits = search.getHits().getHits();
@@ -89,8 +96,14 @@ public class QueryDomainList {
             String info = basic(ip);
             JSONObject jsonObject = JSON.parseObject(info);
             JSONObject data = jsonObject.getJSONObject("data");
-            JSONObject c7 = data.getJSONObject("c7");
-            if (Objects.nonNull(c7)) {
+            if (Objects.nonNull(data)) {
+                JSONObject c7 = data.getJSONObject("c7");
+                if (Objects.nonNull(c7)) {
+                  //  System.out.println("有ip: "+ip);
+                }else {
+                  //  System.out.println("无ip："+ip);
+                }
+            }else {
                 System.out.println(ip);
             }
 
@@ -106,10 +119,11 @@ public class QueryDomainList {
         SearchRequest searchRequest = new SearchRequest();
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder queryBuilder2 = QueryBuilders.boolQuery();
-        queryBuilder2.must(QueryBuilders.wildcardQuery("ioc.keyword", "*.com"));
+        queryBuilder2.must(QueryBuilders.termQuery("ioc_type_agg", "domain"));
+        //queryBuilder2.must(QueryBuilders.wildcardQuery("ioc.keyword", "*.com"));
         sourceBuilder.size(1000);
         sourceBuilder.query(queryBuilder2);
-        sourceBuilder.from(1000);
+        sourceBuilder.from(0);
         searchRequest.indices(index).source(sourceBuilder);
         SearchResponse search = restHighLevelClient231.search(searchRequest);
         SearchHit[] hits = search.getHits().getHits();
@@ -126,8 +140,9 @@ public class QueryDomainList {
             if (status == true) {
                 JSONArray data = jsonObject.getJSONArray("data");
                 if (data.size() > 0) {
-                        System.out.println(ip);
-
+                    System.out.println("有"+ip);
+                }else {
+                    System.out.println("无"+ip);
                 }
             }
 
@@ -135,6 +150,34 @@ public class QueryDomainList {
         }
 
     }
+
+    @Test
+    public void testDomainOutWithRelation() throws Exception {
+        init();
+        String index = "k01_external_intelligence_all";
+        SearchRequest searchRequest = new SearchRequest();
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder queryBuilder2 = QueryBuilders.boolQuery();
+        queryBuilder2.must(QueryBuilders.termQuery("ioc_type_agg", "domain"));
+        //queryBuilder2.must(QueryBuilders.wildcardQuery("ioc.keyword", "*.com"));
+        sourceBuilder.size(1000);
+        sourceBuilder.query(queryBuilder2);
+        sourceBuilder.from(0);
+        searchRequest.indices(index).source(sourceBuilder);
+        SearchResponse search = restHighLevelClient231.search(searchRequest);
+        SearchHit[] hits = search.getHits().getHits();
+        for (int i = 0; i < hits.length; i++) {
+            String ip = hits[i].getSourceAsMap().get("ioc").toString();
+//             Integer relation = relation(ip);
+//             if(relation>100){
+//                 System.out.println(ip);
+//             }
+            System.out.println(ip);
+
+        }
+
+    }
+
 
     public String basic(String host) throws Exception {
         //配置，发送https请求时，忽略ssl证书认证（否则会报错没有证书）
@@ -239,5 +282,57 @@ public class QueryDomainList {
         RestClientBuilder builder = RestClient.builder(array);
         builder.setMaxRetryTimeoutMillis(2 * 60 * 1000);
         restHighLevelClient231 = new RestHighLevelClient(builder);
+    }
+
+    public Integer relation(String host) throws Exception{
+        //配置，发送https请求时，忽略ssl证书认证（否则会报错没有证书）
+        SSLContext sslContext = null;
+
+        sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+            @Override
+            public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                return true;
+            }
+        }).build();
+        //创建httpClient
+        CloseableHttpResponse httpResponse = null;
+        String result = "";
+        // 创建httpClient实例
+        CloseableHttpClient httpClient =  HttpClients.custom().setSslcontext(sslContext).
+                setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+        // 创建httpPost远程连接实例
+        HttpPost httpPost = new HttpPost(basic_local_url+"relation");
+        // 配置请求参数实例(不需要可忽略)
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(35000)// 设置连接主机服务超时时间
+                .setConnectionRequestTimeout(35000)// 设置连接请求超时时间
+                .setSocketTimeout(60000)// 设置读取数据连接超时时间
+                .build();
+        // 为httpPost实例设置配置(不需要可忽略)
+        httpPost.setConfig(requestConfig);
+        // 设置请求头
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        // 封装表单参数
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        Map<String, Object> paramMap = buildParam();
+        paramMap.put("host",host);
+        if (null != paramMap && paramMap.size() > 0) {
+            // 以下代码使用实现类BasicNameValuePair生成NameValuePair
+            // 通过map集成entrySet方法获取entity
+            Set<Map.Entry<String, Object>> entrySet = paramMap.entrySet();
+            // 循环遍历，获取迭代器
+            Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> mapEntry = iterator.next();
+                nvps.add(new BasicNameValuePair(mapEntry.getKey(), mapEntry.getValue().toString()));
+            }
+        }
+        // 为httpPost设置封装好的请求参数
+
+        httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+        // 服务器返回的所有信息都在HttpResponse中, httpClient对象执行post请求,并返回响应参数对象
+        httpResponse = httpClient.execute(httpPost);
+        // 先取出服务器返回的状态码,如果等于200说明success
+        int code = httpResponse.getStatusLine().getStatusCode();
+        return EntityUtils.toString(httpResponse.getEntity()).length();
     }
 }

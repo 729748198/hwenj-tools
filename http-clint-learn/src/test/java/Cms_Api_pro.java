@@ -16,18 +16,24 @@ import org.junit.Test;
 import javax.net.ssl.SSLContext;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author hwenj
  * @since 2022/11/14
  */
 
-public class Cms_Api_test {
+public class Cms_Api_pro {
 
     //public static final String basic_local_url = "https://k01.weishi110.cn:9994/cloudapi/v2/intelligence/";
-    public static final String basic_local_url = "http://192.168.1.87/api/cloudapi/v2/intelligence/";
-   // public static final String basic_local_url = "https://106.37.174.36/api/cloudapi/v2/intelligence/";
+   // public static final String basic_local_url = "http://192.168.1.87/api/cloudapi/v2/intelligence/";
+    public static final String basic_local_url = "https://106.37.174.36/api/cloudapi/v2/intelligence/";
     //public static final String basic_local_url = "https://k01.weishi110.cn:19994/cloudapi/v2/intelligence/";
    // public static final String basic_local_url = "https://106.37.174.18:19994/cloudapi/v2/intelligence/";
    // public static final String basic_local_url = "http://localhost:9888/cloudapi/v2/intelligence/";
@@ -35,7 +41,7 @@ public class Cms_Api_test {
 
     @Test
     public void queryDomain() throws Exception {
-        String host = "114.216.226.67";
+        String host = "btpnav.com";
         System.out.println("基础信息:");
         basic(host);
         System.out.println("攻击情报信息:");

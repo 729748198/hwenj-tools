@@ -38,6 +38,66 @@ public class Cms_Api {
     public static final String basic_local_url = "http://localhost:9888/cloudapi/v2/intelligence/";
 
     @Test
+    public void testGetIpThreatenInfo() throws Exception {
+        //配置，发送https请求时，忽略ssl证书认证（否则会报错没有证书）
+        SSLContext sslContext = null;
+
+        sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+            @Override
+            public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                return true;
+            }
+        }).build();
+        //创建httpClient
+        CloseableHttpResponse httpResponse = null;
+        String result = "";
+        // 创建httpClient实例
+        CloseableHttpClient httpClient =  HttpClients.custom().setSslcontext(sslContext).
+                setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+        // 创建httpPost远程连接实例
+       // HttpPost httpPost = new HttpPost("https://106.37.174.36/api/cloudapi/v2/getIpThreatenInfo");
+        HttpPost httpPost = new HttpPost("http://localhost:9888/cloudapi/v2/getIpShowInfo");
+        // 配置请求参数实例(不需要可忽略)
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(35000)// 设置连接主机服务超时时间
+                .setConnectionRequestTimeout(35000)// 设置连接请求超时时间
+                .setSocketTimeout(60000)// 设置读取数据连接超时时间
+                .build();
+        // 为httpPost实例设置配置(不需要可忽略)
+        httpPost.setConfig(requestConfig);
+        // 设置请求头
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        // 封装表单参数
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        Map<String, Object> paramMap = buildParam();
+        paramMap.put("host","42.236.10.78");
+        if (null != paramMap && paramMap.size() > 0) {
+            // 以下代码使用实现类BasicNameValuePair生成NameValuePair
+            // 通过map集成entrySet方法获取entity
+            Set<Map.Entry<String, Object>> entrySet = paramMap.entrySet();
+            // 循环遍历，获取迭代器
+            Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> mapEntry = iterator.next();
+                nvps.add(new BasicNameValuePair(mapEntry.getKey(), mapEntry.getValue().toString()));
+            }
+        }
+        // 为httpPost设置封装好的请求参数
+
+        httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+        // 服务器返回的所有信息都在HttpResponse中, httpClient对象执行post请求,并返回响应参数对象
+        httpResponse = httpClient.execute(httpPost);
+        // 先取出服务器返回的状态码,如果等于200说明success
+        int code = httpResponse.getStatusLine().getStatusCode();
+        System.out.println(EntityUtils.toString(httpResponse.getEntity()));
+        // 从响应对象中获取响应内容
+        // EntityUtils.toString()有重载方法
+        // 这个静态方法将HttpEntity转换成字符串,防止服务器返回的数据带有中文,所以在转换的时候将字符集指定成utf-8即可
+//            HttpEntity entity = httpResponse.getEntity();
+//            result = EntityUtils.toString(entity, "UTF-8");
+
+    }
+
+    @Test
     public void basic() throws Exception {
         //配置，发送https请求时，忽略ssl证书认证（否则会报错没有证书）
         SSLContext sslContext = null;

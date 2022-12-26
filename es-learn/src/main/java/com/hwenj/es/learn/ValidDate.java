@@ -43,7 +43,7 @@ public class ValidDate {
         DateTime today = DateUtil.parse(dateStr);
         int currentDay = today.dayOfMonth();
         // System.out.println(currentDay);
-        return (int) Math.pow(2, (currentDay - 1));
+        return (int) Math.pow(2, 31 - currentDay);
     }
 
 
