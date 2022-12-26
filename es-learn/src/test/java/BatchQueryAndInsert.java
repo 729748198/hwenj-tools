@@ -66,11 +66,10 @@ public class BatchQueryAndInsert {
     public void testBatchQuery() {
         Map<Integer, TestBean> historyEntityMap = new HashMap<>(2 ^ 15);
         List<String> ids = new ArrayList<>();
-        for (int i = 1; i < 100000; i++) {
-            if (i % 2 == 0)
-                ids.add(String.valueOf(i));
+        for (int i = 100000; i < 100010; i++) {
+            ids.add(String.valueOf(i));
         }
-        List<List<String>> subs = ListUtils.partition(ids, 10000);
+        List<List<String>> subs = ListUtils.partition(ids, 1000);
 
         subs.forEach(idsubs -> {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -94,15 +93,17 @@ public class BatchQueryAndInsert {
                 historyEntityMap.put(testBean.getId(), testBean);
             }
         });
+        System.out.println(historyEntityMap.size());
         int toDay = ValidDate.getDayInt(DateUtil.today());
         int month = DateUtil.thisMonth();
         List<TestBean> testBeanList = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 10000; i++) {
             if (historyEntityMap.containsKey(i)) {
                 TestBean testBean = historyEntityMap.get(i);
                 Integer[] array = testBean.getArray();
                 array[month] |= toDay;
                 testBean.setArray(array);
+                testBean.setName("123");
                 testBeanList.add(testBean);
             }
         }

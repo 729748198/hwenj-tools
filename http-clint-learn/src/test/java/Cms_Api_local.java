@@ -46,7 +46,7 @@ public class Cms_Api_local {
 
     @Test
     public void queryDomain() throws Exception {
-        String host = "mkkuei4kdsz.com";
+        String host = "37.187.250.5";
         System.out.println("基础信息:");
         basic(host);
         System.out.println("攻击情报信息:");
