@@ -30,12 +30,12 @@ public class Cms_Api_test {
    // public static final String basic_local_url = "https://106.37.174.36/api/cloudapi/v2/intelligence/";
     //public static final String basic_local_url = "https://k01.weishi110.cn:19994/cloudapi/v2/intelligence/";
    // public static final String basic_local_url = "https://106.37.174.18:19994/cloudapi/v2/intelligence/";
-   // public static final String basic_local_url = "http://localhost:9888/cloudapi/v2/intelligence/";
+  // public static final String basic_local_url = "http://localhost:9888/cloudapi/v2/intelligence/";
 
 
     @Test
     public void queryDomain() throws Exception {
-        String host = "114.216.226.67";
+        String host = "23.95.107.139";
         System.out.println("基础信息:");
         basic(host);
         System.out.println("攻击情报信息:");
